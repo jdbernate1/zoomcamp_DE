@@ -26,7 +26,7 @@ def main(params):
     else:
         csv_name = 'output.csv'
 
-    os.system(f"wget {url} -O {csv_name}")
+    os.system(f"python -m wget {url} -O {csv_name}") #normalmente se usaria wget {url} -O {csv_name}. Lo uso así porque estoy en gitbash...
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 
