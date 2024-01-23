@@ -191,10 +191,10 @@ if __name__ == '__main__':
 ```
 
 Para llamar este .py desde la consola.
+Ojo, hay que descargar wget.exe y añadirlo "C:\Program Files\Git\mingw64\bin\"
 
 ``` bash
-
-URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz"
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-09.csv.gz"
 python ingest_data.py \
     --user=root \
     --password=root \
@@ -204,4 +204,112 @@ python ingest_data.py \
     --table_name=yellow_taxi_trips\
     --url=${URL}
 
+```
+Este ultimo va tardar un poco subiendo los datos.
+
+## Dockerizar esta ejecucion
+
+con <b>Dockerfile</b>
+``` Dockerfile
+FROM python:3.9.1 
+
+RUN apt-get install wget
+RUN pip install pandas sqlalchemy psycopg2
+
+WORKDIR /app
+COPY ingest_data.py ingest_data.py 
+
+ENTRYPOINT [ "python", "ingest_data.py" ]
+```
+FROM indica que imagen usar.
+RUN son alistamientos que usamos para asegurar que todo funcione. Instalar wget y las librerias de pandas.
+WORKDIR equivalente a cd
+COPY copia los archivos especificados
+ENTRYPOINT indica que hacer al terminar los pasos anterior
+
+#### BUILD del dockerfile
+Ahora que el dockerfile esta definido como necesitamos. Es necesario hacer el build de la imagen para que pueda ser llamada despues.
+Ojo que el punto del final es clave.
+```bash
+docker build -t taxi_ingest:v001 .
+```
+Una vez que el build fue hecho se puede llamar de la siguiente manera.
+Ojo, hay que tener en cuenta que el host ya no sería localhost, sino pg-database. Porque el localhost del container es el mismo. Por esto declaramos el parametro network antes de la imagen.
+``` bash
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-09.csv.gz"
+docker run -it \
+    --network=pg-network \
+    -it taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips\
+    --url=${URL}
+```
+
+Despues de esperar esto deberia popular la tabla yellow_taxi_trips.
+
+#### Nota aparte.
+para probar que descargue más rapido. Se puede iniciar un http.server en python y los archivos van a poder simular ser descargados desde el localhost
+
+```python
+python -m http.server
+```
+
+## Docker Compose
+Ahora para que siempre esten en la misma red y se levanten al mismo tiempo usamos docker compose.
+Hay que crear un docker_compose.yml es diferente a los docker file pero los parametros son los mismos
+
+```yaml
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER = "root"
+      - POSTGRES_PASSWORD = "root" 
+      - POSTGRES_DB = "ny_taxi" 
+    volumes:
+      - ./ny_taxi_postgres_data:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "8080:80"
+```
+Para usarlo hacemos
+
+```bash
+docker-compose up
+```
+o también se puede hacer
+Añadiendo -d para usarlo en modo detached, se puede seguir usando la misma consola.
+
+```bash
+docker-compose up -d
+```
+Luego para inactivarlo ctrl+c y/o
+
+```bash
+docker-compose down
+```
+
+sobre el docker-compose 
+```bash
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-09.csv.gz"
+docker run -it \
+    --network=pg-network \
+    -it taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pgdatabase \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips\
+    --url=${URL}
 ```

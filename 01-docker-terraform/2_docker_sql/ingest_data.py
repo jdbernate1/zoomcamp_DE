@@ -26,16 +26,20 @@ def main(params):
     else:
         csv_name = 'output.csv'
 
-    os.system(f"python -m wget {url} -O {csv_name}") #normalmente se usaria wget {url} -O {csv_name}. Lo uso así porque estoy en gitbash...
+    os.system(f"wget {url} -O {csv_name}") 
+    #También se puede usar instalando wget con python y haciendo python -m wget ...
+    #el parametro -O parece ser que en windows es en mayuscula.
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 
     df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
+    
 
     df = next(df_iter)
 
-    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    # df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+    # df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+
 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
 
@@ -49,8 +53,8 @@ def main(params):
             
             df = next(df_iter)
 
-            df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-            df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+            # df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+            # df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
 
             df.to_sql(name=table_name, con=engine, if_exists='append')
 
