@@ -36,9 +36,18 @@ def main(params):
     
 
     df = next(df_iter)
-
-    # df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-    # df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    try:
+        df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+        df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    except:
+        print("Tpep didnt work")
+        pass
+    try:
+        df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+        df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+    except:
+        print("Lpep didnt work")
+        pass
 
 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
@@ -53,8 +62,18 @@ def main(params):
             
             df = next(df_iter)
 
-            # df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-            # df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+            try:
+                df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+                df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+            except:
+                print("Tpep didnt work")
+                pass
+            try:
+                df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+                df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+            except:
+                print("Lpep didnt work")
+                pass
 
             df.to_sql(name=table_name, con=engine, if_exists='append')
 

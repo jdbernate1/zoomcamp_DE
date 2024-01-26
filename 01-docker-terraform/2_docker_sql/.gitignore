@@ -2,3 +2,4 @@
 ny_taxi_postgres_data/
 *.csv
 *.gz
+1_terraform_gcp\keys
