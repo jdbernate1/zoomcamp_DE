@@ -1,57 +1,83 @@
-## Week 2: Workflow Orchestration
+## Data Engineering Zoomcamp - Week 2
 
-> If you're looking for Airflow videos from the 2022 edition,
-> check the [2022 cohort folder](../cohorts/2022/week_2_data_ingestion/).
+Welcome to DE Zoomcamp with Mage! 
 
-> If you're looking for Prefect videos from the 2023 edition,
-> check the [2023 cohort folder](../cohorts/2023/week_2_workflow_orchestration/).
+Mage is an open-source, hybrid framework for transforming and integrating data. ✨
 
-Python code from videos is linked [below](#code-repository).
+In this module, you'll learn how to use the Mage platform to author and share _magical_ data pipelines. This will all be covered in the course, but if you'd like to learn a bit more about Mage, check out our docs [here](https://docs.mage.ai/introduction/overview). 
 
-### Data Lake (GCS)
+[Get Started](https://github.com/mage-ai/mage-zoomcamp?tab=readme-ov-file#lets-get-started)
+[Assistance](https://github.com/mage-ai/mage-zoomcamp?tab=readme-ov-file#assistance)
 
-* What is a Data Lake
-* ELT vs. ETL
-* Alternatives to components (S3/HDFS, Redshift, Snowflake etc.)
-* [Video](https://www.youtube.com/watch?v=W3Zm6rjOq70&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb)
-* [Slides](https://docs.google.com/presentation/d/1RkH-YhBz2apIjYZAxUz2Uks4Pt51-fVWVN9CcH9ckyY/edit?usp=sharing)
+## Let's get started
 
-### Workflow Orchestration
+This repo contains a Docker Compose template for getting started with a new Mage project. It requires Docker to be installed locally. If Docker is not installed, please follow the instructions [here](https://docs.docker.com/get-docker/). 
 
-Mage videos coming soon
+You can start by cloning the repo:
 
-### Code repository
+```bash
+git clone https://github.com/mage-ai/mage-zoomcamp.git mage-zoomcamp
+```
 
-To be posted after the mage videos
+Navigate to the repo:
 
-### Homework 
-To be posted after the mage videos
+```bash
+cd mage-data-engineering-zoomcamp
+```
 
-## Community notes
+Rename `dev.env` to simply `.env`— this will _ensure_ the file is not committed to Git by accident, since it _will_ contain credentials in the future.
 
-Did you take notes? You can share them here.
+Now, let's build the container
 
-* Add your notes here (above this line)
+```bash
+docker compose build
+```
 
-### 2023 notes
+Finally, start the Docker container:
 
-* [Blog by Marcos Torregrosa (Prefect)](https://www.n4gash.com/2023/data-engineering-zoomcamp-semana-2/)
-* [Notes from Victor Padilha](https://github.com/padilha/de-zoomcamp/tree/master/week2)
-* [Notes by Alain Boisvert](https://github.com/boisalai/de-zoomcamp-2023/blob/main/week2.md)
-* [Notes by Candace Williams](https://github.com/teacherc/de_zoomcamp_candace2023/blob/main/week_2/week2_notes.md)
-* [Notes from Xia He-Bleinagel](https://xiahe-bleinagel.com/2023/02/week-2-data-engineering-zoomcamp-notes-prefect/)
-* [Notes from froukje](https://github.com/froukje/de-zoomcamp/blob/main/week_2_workflow_orchestration/notes/notes_week_02.md)
-* [Notes from Balaji](https://github.com/Balajirvp/DE-Zoomcamp/blob/main/Week%202/Detailed%20Week%202%20Notes.ipynb)
+```bash
+docker compose up
+```
 
+Now, navigate to http://localhost:6789 in your browser! Voila! You're ready to get started with the course. 
 
-### 2022 notes 
+### What just happened?
 
-Most of these notes are about Airflow, but you might find them useful.
+We just initialized a new mage repository. It will be present in your project under the name `magic-zoomcamp`. If you changed the varable `PROJECT_NAME` in the `.env` file, it will be named whatever you set it to.
 
-* [Notes from Alvaro Navas](https://github.com/ziritrion/dataeng-zoomcamp/blob/main/notes/2_data_ingestion.md)
-* [Notes from Aaron Wright](https://github.com/ABZ-Aaron/DataEngineerZoomCamp/blob/master/week_2_data_ingestion/README.md)
-* [Notes from Abd](https://itnadigital.notion.site/Week-2-Data-Ingestion-ec2d0d36c0664bc4b8be6a554b2765fd)
-* [Blog post by Isaac Kargar](https://kargarisaac.github.io/blog/data%20engineering/jupyter/2022/01/25/data-engineering-w2.html)
-* [Blog, notes, walkthroughs by Sandy Behrens](https://learningdataengineering540969211.wordpress.com/2022/01/30/week-2-de-zoomcamp-2-3-2-ingesting-data-to-gcp-with-airflow/)
-* [Notes from Vincenzo Galante](https://binchentso.notion.site/Data-Talks-Club-Data-Engineering-Zoomcamp-8699af8e7ff94ec49e6f9bdec8eb69fd)
-* More on [Pandas vs SQL, Prefect capabilities, and testing your data](https://medium.com/@verazabeida/zoomcamp-2023-week-3-7f27bb8c483f), by Vera
+This repository should have the following structure:
+
+```
+.
+├── mage_data
+│   └── magic-zoomcamp
+├── magic-zoomcamp
+│   ├── __pycache__
+│   ├── charts
+│   ├── custom
+│   ├── data_exporters
+│   ├── data_loaders
+│   ├── dbt
+│   ├── extensions
+│   ├── interactions
+│   ├── pipelines
+│   ├── scratchpads
+│   ├── transformers
+│   ├── utils
+│   ├── __init__.py
+│   ├── io_config.yaml
+│   ├── metadata.yaml
+│   └── requirements.txt
+├── Dockerfile
+├── README.md
+├── dev.env
+├── docker-compose.yml
+└── requirements.txt
+```
+
+## Assistance
+
+1. [Mage Docs](https://docs.mage.ai/introduction/overview): a good place to understand Mage functionality or concepts.
+2. [Mage Slack](https://www.mage.ai/chat): a good place to ask questions or get help from the Mage team.
+3. [DTC Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/week_2_workflow_orchestration): a good place to get help from the community on course-specific inquireies.
+4. [Mage GitHub](https://github.com/mage-ai/mage-ai): a good place to open issues or feature requests.
