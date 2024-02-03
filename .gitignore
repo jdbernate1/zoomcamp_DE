@@ -19,5 +19,5 @@ serving_dir
 
 ny_taxi_postgres_data/
 keys/
-**/mage_data/*
+**mage/mage_data/*
 
