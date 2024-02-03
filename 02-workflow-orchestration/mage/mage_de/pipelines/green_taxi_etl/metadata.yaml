@@ -3,45 +3,46 @@ blocks:
   color: null
   configuration: {}
   downstream_blocks:
-  - transform_staged_data
+  - clean_greentaxi_data
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: load_taxi_gcs
+  name: load_greentaxi_multiurl
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks: []
-  uuid: load_taxi_gcs
-- all_upstream_blocks_executed: true
+  uuid: load_greentaxi_multiurl
+- all_upstream_blocks_executed: false
   color: null
   configuration: {}
   downstream_blocks:
-  - write_taxi_to_bigquery
+  - green_taxi_to_pg
+  - greentaxi_to_gcs_part
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: transform_staged_data
+  name: clean_greentaxi_data
   retry_config: null
   status: executed
   timeout: null
   type: transformer
   upstream_blocks:
-  - load_taxi_gcs
-  uuid: transform_staged_data
-- all_upstream_blocks_executed: true
+  - load_greentaxi_multiurl
+  uuid: clean_greentaxi_data
+- all_upstream_blocks_executed: false
   color: null
   configuration:
-    data_provider: bigquery
-    data_provider_profile: default
-    data_provider_schema: ny_taxi
-    data_provider_table: yellow_cab_data
+    data_provider: postgres
+    data_provider_profile: dev
+    data_provider_schema: mage
+    data_provider_table: green_taxi
     dbt: {}
     disable_query_preprocessing: false
-    export_write_policy: append
+    export_write_policy: replace
     limit: 1000
     use_raw_sql: false
   downstream_blocks: []
@@ -49,26 +50,46 @@ blocks:
   executor_type: local_python
   has_callback: false
   language: sql
-  name: write_taxi_to_bigquery
+  name: green_taxi_to_pg
+  retry_config: null
+  status: failed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - clean_greentaxi_data
+  uuid: green_taxi_to_pg
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    data_provider: postgres
+    data_provider_profile: dev
+    data_provider_schema: mage
+    export_write_policy: replace
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: greentaxi_to_gcs_part
   retry_config: null
   status: executed
   timeout: null
   type: data_exporter
   upstream_blocks:
-  - transform_staged_data
-  uuid: write_taxi_to_bigquery
+  - clean_greentaxi_data
+  uuid: greentaxi_to_gcs_part
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
 conditionals: []
-created_at: '2024-02-01 01:34:28.256642+00:00'
+created_at: '2024-02-03 15:34:26.919132+00:00'
 data_integration: null
 description: null
 executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: gcs_to_bigquery
+name: green_taxi_etl
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -78,7 +99,7 @@ settings:
 spark_config: {}
 tags: []
 type: python
-updated_at: '2024-02-03 15:23:39'
-uuid: gcs_to_bigquery
+updated_at: '2024-02-03 16:12:08'
+uuid: green_taxi_etl
 variables_dir: /home/src/mage_data/mage_de
 widgets: []
