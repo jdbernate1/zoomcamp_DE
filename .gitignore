@@ -16,8 +16,6 @@ serving_dir
 !week_6_stream_processing/avro_example/data/rides.csv
 **.env
 **/keys/*
-
 ny_taxi_postgres_data/
 keys/
-
-/02-workflow-orchestration/mage/
+**/mage_data/*
