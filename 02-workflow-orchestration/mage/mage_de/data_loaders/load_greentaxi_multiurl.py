@@ -7,9 +7,18 @@ if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
 periods =[
-    '2020-10',
-    '2020-11',
-    '2020-12'
+    '2022-01',
+    '2022-02',
+    '2022-03',
+    '2022-04',
+    '2022-05',
+    '2022-06',
+    '2022-07',
+    '2022-08',
+    '2022-09',
+    '2022-10',
+    '2022-11',
+    '2022-12'
 ]
 
 @data_loader
@@ -35,10 +44,9 @@ def load_data_from_api(*args, **kwargs):
                 'congestion_surcharge':float
             }
     parse_dates = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']
-
+    url = kwargs['configuration'].get('url_source')
     for p in periods:
-        url = f'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_{p}.csv.gz'
-        #response = requests.get(url)
+        url = url+'green_tripdata_{p}.csv.gz'
         df_raw = pd.read_csv(url, sep=',', compression='gzip', dtype=taxi_dtypes, parse_dates=parse_dates)
         dfs.append(df_raw)
     
