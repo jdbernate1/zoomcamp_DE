@@ -95,6 +95,7 @@ Con el paquete
 Se pueden generar el schema.yml para obtener todas las columnas y añadir los testeos necesarios. Un ejemplo de como usarlo
 
 ```sql
+-- Lo corres desde un untitle.sql
 {%set models_to_generate = codegen.get_models(directory='staging',prefix='stg')%}
 
 {{codegen.generate_model_yaml(
@@ -102,4 +103,50 @@ Se pueden generar el schema.yml para obtener todas las columnas y añadir los te
 )
 
 }}
+```
+y Genera
+```yml
+version: 2
+
+models:
+  - name: stg_green_taxi_data
+    description: ""
+    columns:
+      - name: tripid
+        data_type: string
+        description: ""
+
+      - name: vendorid
+        data_type: int64
+        description: ""
+... #para todos los sources en 
+```
+
+Ejemplos de tests:
+
+```yml
+    columns:
+      - name: tripid
+        data_type: string
+        description: ""
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+      - name: pickup_locationid
+        data_type: int64
+        description: ""
+        tests:
+          - relationships:
+              field: locationid
+              to: ref('taxi_zone_lookup')
+              severity: warn
+      - name: payment_type
+        data_type: int64
+        description: ""
+        tests:
+          - accepted_values:
+              values: "{{ var('payment_type_values') }}"
+              severity: warn
+              quote: false
 ```
