@@ -21,29 +21,49 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'C:\\Users\\JuanDiego\\Documents\
 BUCKET = os.environ.get("GCP_GCS_BUCKET", "week_4_analytics_eng")
 
 
-
 def schema(service):
-    taxi_dtypes = {
-            'VendorID': pd.Int64Dtype(),
-            'passenger_count': pd.Int64Dtype(),
-            'trip_distance': float,
-            'RatecodeID':pd.Int64Dtype(),
-            'store_and_fwd_flag':str,
-            'PULocationID':pd.Int64Dtype(),
-            'DOLocationID':pd.Int64Dtype(),
-            'payment_type': pd.Int64Dtype(),
-            'fare_amount': float,
-            'extra':float,
-            'mta_tax':float,
-            'tip_amount':float,
-            'tolls_amount':float,
-            'improvement_surcharge':float,
-            'total_amount':float,
-            'congestion_surcharge':float
-            }
     if service == 'green':
+        taxi_dtypes = {
+                'VendorID': pd.Int64Dtype(),
+                'passenger_count': pd.Int64Dtype(),
+                'trip_distance': float,
+                'RatecodeID':pd.Int64Dtype(),
+                'store_and_fwd_flag':str,
+                'PULocationID':pd.Int64Dtype(),
+                'DOLocationID':pd.Int64Dtype(),
+                'payment_type': pd.Int64Dtype(),
+                'fare_amount': float,
+                'extra':float,
+                'mta_tax':float,
+                'tip_amount':float,
+                'tolls_amount':float,
+                'ehail_fee':float,
+                'improvement_surcharge':float,
+                'total_amount':float,
+                'payment_type': pd.Int64Dtype(),
+                'trip_type': pd.Int64Dtype(),
+                'congestion_surcharge':float
+            }
         parse_dates = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']
     elif service == 'yellow':
+        taxi_dtypes = {
+                'VendorID': pd.Int64Dtype(),
+                'passenger_count': pd.Int64Dtype(),
+                'trip_distance': float,
+                'RatecodeID':pd.Int64Dtype(),
+                'store_and_fwd_flag':str,
+                'PULocationID':pd.Int64Dtype(),
+                'DOLocationID':pd.Int64Dtype(),
+                'payment_type': pd.Int64Dtype(),
+                'fare_amount': float,
+                'extra':float,
+                'mta_tax':float,
+                'tip_amount':float,
+                'tolls_amount':float,
+                'improvement_surcharge':float,
+                'total_amount':float,
+                'congestion_surcharge':float
+            }
         parse_dates = ['tpep_pickup_datetime', 'tpep_dropoff_datetime']
     
     return taxi_dtypes, parse_dates
@@ -93,7 +113,7 @@ def web_to_gcs(year, service):
         print(f"GCS: {service}/{file_name}")
 
 
-web_to_gcs('2019', 'green')
+# web_to_gcs('2019', 'green')
 web_to_gcs('2020', 'green')
-web_to_gcs('2019', 'yellow')
-web_to_gcs('2020', 'yellow')
+# web_to_gcs('2019', 'yellow')
+# web_to_gcs('2020', 'yellow')
