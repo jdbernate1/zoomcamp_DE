@@ -15,7 +15,7 @@ Pre-reqs:
 # services = ['fhv','green','yellow']
 init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/'
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'C:\\Users\\JuanDiego\\Documents\\data-engineering-zoomcamp\\04-analytics-engineering\\upload_to_gcs\\keys\\dezoomcampjdbv-5c85d5d501cf.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'C:\\Users\\JuanDiego\\Documents\\data-engineering-zoomcamp\\04-analytics-engineering\\upload_to_bigquery\\keys\\dezoomcampjdbv-5c85d5d501cf.json'
 
 
 BUCKET = os.environ.get("GCP_GCS_BUCKET", "week_4_analytics_eng")
@@ -65,6 +65,15 @@ def schema(service):
                 'congestion_surcharge':float
             }
         parse_dates = ['tpep_pickup_datetime', 'tpep_dropoff_datetime']
+    if service == 'fhv':
+        taxi_dtypes = {
+                'dispatching_base_num': str,
+                'PULocationID':pd.Int64Dtype(),
+                'DOLocationID':pd.Int64Dtype(),
+                'SR_Flag': str,
+                'Affiliated_base_number': str,
+            }
+        parse_dates = ['pickup_datetime']#, 'dropoff_datetime']
     
     return taxi_dtypes, parse_dates
 
@@ -89,6 +98,7 @@ def web_to_gcs(year, service):
         # sets the month part of the file_name string
         month = '0'+str(i+1)
         month = month[-2:]
+        print(month)
 
         # csv file_name
         file_name = f"{service}_tripdata_{year}-{month}.csv.gz"
@@ -104,6 +114,12 @@ def web_to_gcs(year, service):
         # read it back into a parquet file
         col_types, col_dates = schema(service)
         df = pd.read_csv(file_name, compression='gzip',dtype=col_types, parse_dates=col_dates)
+
+        if service == 'fhv':
+            df.columns = df.columns.str.lower()
+            df['dropoff_datetime'] = pd.to_datetime(df['dropoff_datetime'])
+
+
         file_name = file_name.replace('.csv.gz', '.parquet')
         df.to_parquet(file_name, engine='pyarrow')
         print(f"Parquet: {file_name}")
@@ -114,6 +130,8 @@ def web_to_gcs(year, service):
 
 
 # web_to_gcs('2019', 'green')
-web_to_gcs('2020', 'green')
+# web_to_gcs('2020', 'green')
 # web_to_gcs('2019', 'yellow')
 # web_to_gcs('2020', 'yellow')
+        
+web_to_gcs('2019', 'fhv')
