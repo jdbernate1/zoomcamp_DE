@@ -9,14 +9,20 @@ if 'data_exporter' not in globals():
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "/home/src/keys/dezoomcampjdbv-5c85d5d501cf.json"
 project_id = 'dezoomcampjdbv'
-bucket_name = 'mage_zoomcamp_jdbv'
-table_name = "nyc_taxi_data"
 
-root_path = f'{bucket_name}/{table_name}'
+
 
 @data_exporter
 def export_data(data,*args, **kwargs):
-    data['tpep_pickup_date'] = data['tpep_pickup_datetime'].dt.date
+    bucket_name = kwargs['configuration'].get('bucket_name')
+    table_name = kwargs['configuration'].get('table_name')
+    str_col_part = kwargs['configuration'].get('datetitme_column')
+    print("bucket name: ", bucket_name)
+    print("table name: ", table_name)
+    print("datetime_col: ", str_col_part)
+
+    root_path = f'{bucket_name}/{table_name}'
+    data['pickup_date'] = data[str_col_part].dt.strftime('%Y-%m')
 
     table = pa.Table.from_pandas(data)
 
@@ -25,7 +31,7 @@ def export_data(data,*args, **kwargs):
     pq.write_to_dataset(
         table,
         root_path = root_path,
-        partition_cols = ['tpep_pickup_date'],
+        partition_cols = ['pickup_date'],
         filesystem = gcs
     )
 

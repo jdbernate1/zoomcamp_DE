@@ -8,6 +8,7 @@
 **google_credentials.json
 **logs/
 **.env
+**/.venv/
 **__pycache__/
 .history
 **/ny_taxi_postgres_data/*
@@ -19,3 +20,4 @@ serving_dir
 ny_taxi_postgres_data/
 keys/
 **/mage_data/
+02-workflow-orchestration/mage/mage_data/

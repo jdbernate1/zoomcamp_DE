@@ -1,0 +1,88 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    end_date: '2019-06-30'
+    start_date: '2019-01-01'
+    url_source: https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/
+  downstream_blocks:
+  - taxi_to_gcs_partitioned
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: load_yellowtaxi_multiurl
+  retry_config: {}
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: load_yellowtaxi_multiurl
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    end_date: '2020-12-31'
+    file_source:
+      path: data_loaders/load_greentaxi_multiurl.py
+    start_date: '2020-07-01'
+    url_source: https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/
+  downstream_blocks:
+  - taxi_to_gcs_partitioned
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: load_greentaxi_multiurl
+  retry_config: {}
+  status: executed
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: load_greentaxi_multiurl
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    bucket_name: week_4_analytics_eng
+    datetitme_column: lpep_pickup_datetime
+    file_source:
+      path: data_exporters/taxi_to_gcs_partitioned.py
+    table_name: yellow_taxi_data
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: taxi_to_gcs_partitioned
+  retry_config: {}
+  status: executed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - load_yellowtaxi_multiurl
+  - load_greentaxi_multiurl
+  uuid: taxi_to_gcs_partitioned
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals: []
+created_at: '2024-02-18 13:57:54.627848+00:00'
+data_integration: null
+description: null
+executor_config: {}
+executor_count: 1
+executor_type: null
+extensions: {}
+name: week4_greentaxi_19_20_to_gcs
+notification_config: {}
+remote_variables_dir: null
+retry_config: {}
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags: []
+type: python
+updated_at: '2024-02-18T17:41:47+00:00'
+uuid: week4_greentaxi_19_20_to_gcs
+variables_dir: /home/src/mage_data/mage_de
+widgets: []

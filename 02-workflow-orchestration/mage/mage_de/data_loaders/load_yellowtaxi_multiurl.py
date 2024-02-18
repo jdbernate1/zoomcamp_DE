@@ -48,11 +48,11 @@ def load_data_from_api(*args, **kwargs):
                 'total_amount':float,
                 'congestion_surcharge':float
             }
-    parse_dates = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']
+    parse_dates = ['tpep_pickup_datetime', 'tpep_dropoff_datetime']
     url_base = kwargs['configuration'].get('url_source')
 
     for p in periods:
-        url = url_base+'green_tripdata_'+p+'.csv.gz'
+        url = url_base+'yellow_tripdata_'+p+'.csv.gz'
         print(url)
         df_raw = pd.read_csv(url, sep=',', compression='gzip', dtype=taxi_dtypes, parse_dates=parse_dates)
         dfs.append(df_raw)
