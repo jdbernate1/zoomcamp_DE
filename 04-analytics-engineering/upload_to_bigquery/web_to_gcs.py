@@ -68,8 +68,8 @@ def schema(service):
     if service == 'fhv':
         taxi_dtypes = {
                 'dispatching_base_num': str,
-                'PULocationID':pd.Int64Dtype(),
-                'DOLocationID':pd.Int64Dtype(),
+                'PULocationID':str,
+                'DOLocationID':str,
                 'SR_Flag': str,
                 'Affiliated_base_number': str,
             }
@@ -115,12 +115,19 @@ def web_to_gcs(year, service):
         col_types, col_dates = schema(service)
         df = pd.read_csv(file_name, compression='gzip',dtype=col_types, parse_dates=col_dates)
 
+
         if service == 'fhv':
             df.columns = df.columns.str.lower()
             df['dropoff_datetime'] = pd.to_datetime(df['dropoff_datetime'])
+            df['pulocationid'] = df['pulocationid'].astype("string")
+            df['dolocationid'] = df['dolocationid'].astype("string")
+            df['sr_flag'] = df['sr_flag'].astype("string")
+            df['affiliated_base_number'] = df['affiliated_base_number'].astype("string")
+            print(df.dtypes)
 
 
         file_name = file_name.replace('.csv.gz', '.parquet')
+        
         df.to_parquet(file_name, engine='pyarrow')
         print(f"Parquet: {file_name}")
 
